@@ -1,7 +1,6 @@
 package workerpool
 
 import (
-	"log"
 	"sync"
 )
 
@@ -26,14 +25,11 @@ func newDispatcher(numWorkers int, jobQueue chan Job) *dispatcher {
 		jobPool:    jobQueue,
 	}
 
-	log.Printf("Spawning %d background workers", d.numWorkers)
 	for i := 0; i < d.numWorkers; i++ {
 		w := newWorker(i+1, d.workerPool)
 		w.start(d.wg)
 		d.workers <- w
 	}
-
-	log.Printf("Started %d background workers", d.numWorkers)
 
 	go d.dispatch()
 
@@ -42,7 +38,6 @@ func newDispatcher(numWorkers int, jobQueue chan Job) *dispatcher {
 
 // Stop dispatcher
 func (d *dispatcher) stop() {
-	log.Printf("Stopping background workers")
 	defer func() {
 		// clear WorkerPool
 		for range d.workerPool {
