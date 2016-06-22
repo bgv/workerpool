@@ -10,7 +10,7 @@ import (
 func main() {
 	// Number of workers, and Size of the job queue
 	pool := workerpool.New(10, 50)
-    // Release the resources after we finish
+	// Release the resources after we finish
 	defer pool.Stop()
 
 	// create and submit 10 jobs to the pool
