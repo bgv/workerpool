@@ -45,7 +45,7 @@ func (d *dispatcher) stop() {
 	log.Printf("Stopping background workers")
 	defer func() {
 		// clear WorkerPool
-		for _ = range d.workerPool {
+		for range d.workerPool {
 			if len(d.workerPool) == 0 {
 				return
 			}
