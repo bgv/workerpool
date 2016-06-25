@@ -22,9 +22,7 @@ func newWorker(id int, workerPool chan chan Job) worker {
 }
 
 func (w worker) start(wg *sync.WaitGroup) {
-	wg.Add(1)
 	go func() {
-		defer wg.Done()
 		for {
 			// Add my jobQueue to the worker pool.
 			w.workerPool <- w.jobQueue
@@ -33,6 +31,7 @@ func (w worker) start(wg *sync.WaitGroup) {
 			case job := <-w.jobQueue:
 				// Dispatcher has added a job to my jobQueue.
 				job()
+				wg.Done()
 			case <-w.quitChan:
 				// We have been asked to stop.
 				return
