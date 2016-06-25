@@ -26,7 +26,8 @@ func New(numWorkers int, queueLen int) *Pool {
 	return pool
 }
 
-// Stop will stop the workers and release resources used by pool
+// Stop will wait for all jobs to finish, stop the workers
+// and release resources used by pool
 func (p *Pool) Stop() {
 	p.d.stop()
 }
