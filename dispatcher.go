@@ -38,7 +38,7 @@ func newDispatcher(numWorkers int, jobQueue chan Job) *dispatcher {
 
 // stop waits for any jobs to finish and stops dispatcher
 func (d *dispatcher) stop() {
-    d.wg.Wait()
+	d.wg.Wait()
 	defer func() {
 		// clear WorkerPool
 		for range d.workerPool {
@@ -65,8 +65,8 @@ func (d *dispatcher) dispatch() {
 	for {
 		select {
 		case job := <-d.jobPool:
-		    // New job added, increase WaitGroup counter
-		    d.wg.Add(1)
+			// New job added, increase WaitGroup counter
+			d.wg.Add(1)
 			go func() {
 				workerQueue := <-d.workerPool
 				workerQueue <- job
