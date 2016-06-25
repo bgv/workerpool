@@ -3,10 +3,10 @@ sudo: false
 language: go
 
 go:
-  - tip
-  - 1.6
+  - 1.5.4
+  - 1.6.2
 
 script:
-  - go fmt ./...
-  - go vet ./...
-  - go test -v -race ./...
+  - go fmt
+  - go vet
+  - go test -v -race
