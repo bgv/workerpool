@@ -41,7 +41,5 @@ func (w worker) start(wg *sync.WaitGroup) {
 }
 
 func (w worker) stop() {
-	go func() {
-		w.quitChan <- true
-	}()
+	w.quitChan <- true
 }

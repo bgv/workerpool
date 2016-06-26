@@ -67,10 +67,8 @@ func (d *dispatcher) dispatch() {
 		case job := <-d.jobPool:
 			// New job added, increase WaitGroup counter
 			d.wg.Add(1)
-			go func() {
-				workerQueue := <-d.workerPool
-				workerQueue <- job
-			}()
+			workerQueue := <-d.workerPool
+			workerQueue <- job
 		}
 	}
 }

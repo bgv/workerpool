@@ -18,12 +18,10 @@ type Pool struct {
 func New(numWorkers int, queueLen int) *Pool {
 	jobQueue := make(chan Job, queueLen)
 
-	pool := &Pool{
+	return &Pool{
 		JobQueue: jobQueue,
 		d:        newDispatcher(numWorkers, jobQueue),
 	}
-
-	return pool
 }
 
 // Stop will wait for all jobs to finish, stop the workers
