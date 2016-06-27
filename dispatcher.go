@@ -67,7 +67,8 @@ func (d *dispatcher) dispatch() {
 	for {
 		select {
 		case job := <-d.jobPool:
-			// New job added, increase WaitGroup counter
+			// New job added, assign worker
+			// from the pool and send the job
 			workerQueue := <-d.workerPool
 			workerQueue <- job
 		case <-d.quitChan:
