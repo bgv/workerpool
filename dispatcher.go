@@ -10,6 +10,7 @@ type dispatcher struct {
 	workerPool chan chan Job
 	numWorkers int
 	jobPool    chan Job
+	quitChan   chan bool
 }
 
 // newDispatcher creates, and starts new dispatcher object.
@@ -23,11 +24,12 @@ func newDispatcher(numWorkers int, jobQueue chan Job) *dispatcher {
 		numWorkers: numWorkers,
 		workerPool: workerPool,
 		jobPool:    jobQueue,
+		quitChan:   make(chan bool),
 	}
 
 	for i := 0; i < d.numWorkers; i++ {
-		w := newWorker(i+1, d.workerPool)
-		w.start(d.wg)
+		w := newWorker(i+1, d.wg, d.workerPool)
+		w.start()
 		d.workers <- w
 	}
 
@@ -38,7 +40,6 @@ func newDispatcher(numWorkers int, jobQueue chan Job) *dispatcher {
 
 // stop waits for any jobs to finish and stops dispatcher
 func (d *dispatcher) stop() {
-	d.wg.Wait()
 	defer func() {
 		// clear WorkerPool
 		for range d.workerPool {
@@ -54,6 +55,7 @@ func (d *dispatcher) stop() {
 			return
 		}
 	}
+	d.wg.Wait()
 }
 
 // dispatch starts the dispatcher
@@ -66,9 +68,10 @@ func (d *dispatcher) dispatch() {
 		select {
 		case job := <-d.jobPool:
 			// New job added, increase WaitGroup counter
-			d.wg.Add(1)
 			workerQueue := <-d.workerPool
 			workerQueue <- job
+		case <-d.quitChan:
+			return
 		}
 	}
 }

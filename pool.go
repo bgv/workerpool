@@ -11,7 +11,9 @@ type Pool struct {
 }
 
 // New creates pool of workers.
+//
 // numWorkers - how many workers will be created for this pool
+//
 // queueLen - how many jobs can we accept until we block
 //
 // Returned object contains JobQueue reference, which you can use to send job to pool.
@@ -27,5 +29,5 @@ func New(numWorkers int, queueLen int) *Pool {
 // Stop will wait for all jobs to finish, stop the workers
 // and release resources used by pool
 func (p *Pool) Stop() {
-	p.d.stop()
+	p.d.quitChan <- true
 }
