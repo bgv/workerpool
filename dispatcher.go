@@ -69,8 +69,10 @@ func (d *dispatcher) dispatch() {
 		case job := <-d.jobPool:
 			// New job added, assign worker
 			// from the pool and send the job
-			workerQueue := <-d.workerPool
-			workerQueue <- job
+			go func(job Job) {
+				workerQueue := <-d.workerPool
+				workerQueue <- job
+			}(job)
 		case <-d.quitChan:
 			return
 		}
