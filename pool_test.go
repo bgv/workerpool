@@ -6,9 +6,9 @@ import (
 )
 
 func Test_NewPool(t *testing.T) {
-	pool := New(100, 1000)
+	pool := New(10, 1000)
 
-	iterations := 100000
+	iterations := 10000
 	var counter uint64
 
 	for i := 0; i < iterations; i++ {
@@ -19,9 +19,10 @@ func Test_NewPool(t *testing.T) {
 			if arg != uint64(1) {
 				t.Errorf("Expected: %d, got: %d", uint64(1), arg)
 			}
+			pool.JobDone()
 		}
 
-		pool.JobQueue <- job
+		pool.AddJob(job)
 	}
 
 	pool.Stop()
