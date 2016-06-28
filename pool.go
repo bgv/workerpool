@@ -1,7 +1,7 @@
 package workerpool
 
 import (
-    "sync"
+	"sync"
 )
 
 // Job is the function which should be executed in worker.
@@ -48,6 +48,6 @@ func (p *Pool) JobDone() {
 // and then will stop the workers. If jobs are added directly to the que,
 // Stop() will just shutdown the workers without waiting for any jobs already in the que.
 func (p *Pool) Stop() {
-    p.wg.Wait()
+	p.wg.Wait()
 	p.d.quitChan <- true
 }
