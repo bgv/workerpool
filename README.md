@@ -32,9 +32,10 @@ for i := 0; i < 100; i++ {
 
     job := func() {
     	fmt.Printf("I am job number %d!\n", count)
+    	pool.JobDone()
     }
 
-    pool.JobQueue <- job
+    pool.AddJob(job)
 }
 
 // Wait for all jobs and then stop the worker pool
