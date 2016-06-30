@@ -15,11 +15,12 @@ func main() {
 	for i := 0; i < 100; i++ {
 		count := i
 
-		simplepool.JobQueue <- func() {
+		simplepool.AddJob(func() {
 			fmt.Printf("I am job! Number %d\n", count)
-		}
+			simplepool.JobDone()
+		})
 	}
 
-	// Wait for all jobs to finish and stop the workers
+	// Wait for all jobs to finish and stop the workers.
 	simplepool.Stop()
 }
