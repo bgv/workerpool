@@ -49,5 +49,5 @@ func (p *Pool) JobDone() {
 // Stop() will just shutdown the workers without waiting for any jobs already in the que.
 func (p *Pool) Stop() {
 	p.wg.Wait()
-	p.d.quitChan <- true
+	p.d.stop()
 }

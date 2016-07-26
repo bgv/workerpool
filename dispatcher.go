@@ -38,16 +38,9 @@ func newDispatcher(numWorkers int, jobQueue chan Job) *dispatcher {
 	return d
 }
 
-// stop waits for any jobs to finish and stops dispatcher
-func (d *dispatcher) stop() {
-	defer func() {
-		// clear WorkerPool
-		for range d.workerPool {
-			if len(d.workerPool) == 0 {
-				return
-			}
-		}
-	}()
+// shutdown tells the workers to stop and waits them to finish
+func (d *dispatcher) shutdown() {
+	defer d.wg.Wait()
 
 	for w := range d.workers {
 		w.stop()
@@ -55,13 +48,12 @@ func (d *dispatcher) stop() {
 			return
 		}
 	}
-	d.wg.Wait()
 }
 
 // dispatch starts the dispatcher
 func (d *dispatcher) dispatch() {
 	defer func() {
-		d.stop()
+		d.shutdown()
 	}()
 
 	for {
@@ -73,8 +65,14 @@ func (d *dispatcher) dispatch() {
 				workerQueue := <-d.workerPool
 				workerQueue <- job
 			}(job)
+			// we've been asked to stop!
 		case <-d.quitChan:
 			return
 		}
 	}
+}
+
+// stop stops the dispatcher
+func (d *dispatcher) stop() {
+	d.quitChan <- true
 }
