@@ -12,6 +12,7 @@ matrix:
   fast_finish: true
 
 script:
-  - go fmt
+  - test -z "$(gofmt -s -l $(find . -name '*.go' -type f -print) | tee /dev/stderr)"
   - go vet
-  - go test -v -race
+  - go test -v ./...
+  - go test -race -v ./...
